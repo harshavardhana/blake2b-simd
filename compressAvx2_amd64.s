@@ -108,8 +108,8 @@ TEXT ·compressAVX2Loop(SB), 7, $0
     BYTE $0xc5; BYTE $0xfe; BYTE $0x7f; BYTE $0x4e; BYTE $0x20   // VMOVDQU 32[rsi], YMM1
 
     // Initialize message pointer and loop counter
-    MOVQ   message+0(FP), DX  // DX: &p (message)
-    MOVQ   message_len+8(FP), R8 // R8: len(message)
+    MOVQ   p_base+0(FP), DX  // DX: &p (message)
+    MOVQ   p_len+8(FP), R8 // R8: len(message)
     SHRQ   $7, R8             // len(message) / 128
     CMPQ   R8, $0
     JEQ    complete
@@ -134,7 +134,7 @@ noincr:                       //                       /* } */
     MOVQ t+72(FP), SI         // SI: &t
     BYTE $0xc4; BYTE $0x63; BYTE $0x3d; BYTE $0x38; BYTE $0x06   // VINSERTI128 YMM8, YMM8, [rsi], 0  /* Y8 = t[0]+t[1] */
                 BYTE $0x00
-    MOVQ t+96(FP), SI         // SI: &f
+    MOVQ f+96(FP), SI         // SI: &f
     BYTE $0xc4; BYTE $0x63; BYTE $0x3d; BYTE $0x38; BYTE $0x06   // VINSERTI128 YMM8, YMM8, [rsi], 1  /* Y8 = t[0]+t[1]+f[0]+f[1] */
                 BYTE $0x01
     BYTE $0xc4; BYTE $0xc1; BYTE $0x65; BYTE $0xef; BYTE $0xd8   // VPXOR   YMM3,YMM3,YMM8            /* Y3 = Y3 ^ Y8 */

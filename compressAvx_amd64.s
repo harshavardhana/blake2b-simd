@@ -145,8 +145,8 @@ TEXT ·blockAVXLoop(SB), 7, $0
 	MOVOU X3, 48(SI)      // out[6]+out[7] = X3
 
 	// Initialize message pointer and loop counter
-	MOVQ message+0(FP), DX     // DX: &p (message)
-	MOVQ message_len+8(FP), R8 // R8: len(message)
+	MOVQ p_base+0(FP), DX     // DX: &p (message)
+	MOVQ p_len+8(FP), R8 // R8: len(message)
 	SHRQ $7, R8                // len(message) / 128
 	CMPQ R8, $0
 	JEQ  complete
@@ -173,7 +173,7 @@ noincr:               // /* } */
 	MOVQ  t+72(FP), SI  // SI: &t
 	MOVOU 0(SI), X8     // X8 = t[0]+t[1]        /*                                                LOAD( &S->t[0] )    */
 	PXOR  X8, X6        // X6 = X6 ^ X8          /* row4l = _mm_xor_si128(                       ,                  ); */
-	MOVQ  t+96(FP), SI  // SI: &f
+	MOVQ  f+96(FP), SI  // SI: &f
 	MOVOU 0(SI), X8     // X8 = f[0]+f[1]        /*                                                LOAD( &S->f[0] )    */
 	PXOR  X8, X7        // X7 = X7 ^ X8          /* row4h = _mm_xor_si128(                       ,                  ); */
 
